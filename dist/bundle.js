@@ -42,9 +42,19 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+
+	var _utils = __webpack_require__(1);
+
+	var _utils2 = _interopRequireDefault(_utils);
+
+	var _utils3 = __webpack_require__(2);
+
+	var _utils4 = _interopRequireDefault(_utils3);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var shortcutKeycodes = {
 	  B: { code: 66, action: 'bold' },
@@ -52,6 +62,24 @@
 	  U: { code: 85, action: 'underline' }
 	};
 
+	window.onload = function () {
+	  console.log('Setting things up');
+	  document.execCommand("styleWithCSS", false, false);
+	  if (navigator.vendor !== 'Google Inc.') {
+	    (0, _utils2.default)(shortcutKeycodes);
+	  }
+	  (0, _utils4.default)();
+	};
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	function dispatchTransform(transformName) {
 	  document.execCommand(transformName, false, null);
 	}
@@ -62,7 +90,7 @@
 	  dispatchTransform(transformName);
 	}
 
-	function setupKeys() {
+	function setupKeys(shortcutKeycodes) {
 	  document.onkeydown = function (e) {
 	    e = e || window.event;
 	    if (e.ctrlKey) {
@@ -78,13 +106,47 @@
 	  };
 	}
 
-	window.onload = function () {
-	  console.log('Setting things up');
-	  document.execCommand("styleWithCSS", false, false);
-	  if (navigator.vendor !== 'Google Inc.') {
-	    setupKeys();
-	  }
-	};
+	exports.default = setupKeys;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var supportedFormats = ['image/png', 'image/jpeg', 'image/bpm'];
+
+	function setupImages() {
+	  var contentBox = document.getElementsByClassName('content')[0];
+	  document.ondragover = function () {
+	    return false;
+	  };
+	  document.ondragend = function () {
+	    return false;
+	  };
+	  document.ondrop = function (e) {
+	    e.preventDefault();
+	    console.log(e.dataTransfer.files);
+	    if (e.dataTransfer.files.length) {
+	      var file = e.dataTransfer.files[0];
+	      if (supportedFormats.indexOf(file.type) !== -1) {
+	        var reader = new FileReader();
+	        reader.onload = function (event) {
+	          var newImage = document.createElement('img');
+	          newImage.src = event.target.result;
+	          contentBox.appendChild(newImage);
+	        };
+	        reader.readAsDataURL(file);
+	        return false;
+	      }
+	    }
+	  };
+	}
+
+	exports.default = setupImages;
 
 /***/ }
 /******/ ]);
