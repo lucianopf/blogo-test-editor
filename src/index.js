@@ -30,7 +30,6 @@ function setupKeys () {
 
 window.onload = () => {
   console.log('Setting things up')
-	document.designMode = 'On';
   document.execCommand("styleWithCSS",false,false)
   if (navigator.vendor !== 'Google Inc.') {
     setupKeys()
