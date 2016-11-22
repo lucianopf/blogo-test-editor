@@ -93,7 +93,7 @@
 	function setupKeys(shortcutKeycodes) {
 	  document.onkeydown = function (e) {
 	    e = e || window.event;
-	    if (e.ctrlKey) {
+	    if (e.ctrlKey || e.metaKey) {
 	      (function () {
 	        var c = e.which || e.keyCode;
 	        Object.keys(shortcutKeycodes).forEach(function (key) {
