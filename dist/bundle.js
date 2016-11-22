@@ -64,7 +64,7 @@
 
 	window.onload = function () {
 	  console.log('Setting things up');
-	  document.execCommand("styleWithCSS", false, false);
+	  document.execCommand('styleWithCSS', false, false);
 	  if (navigator.vendor !== 'Google Inc.') {
 	    (0, _utils2.default)(shortcutKeycodes);
 	  }
@@ -117,10 +117,20 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var supportedFormats = ['image/png', 'image/jpeg', 'image/bpm'];
+	var supportedFormats = ['image/png', 'image/jpeg', 'image/bpm', '.jpg', '.png', '.bmp'];
+
+	function appendOnTargetOrDefault(e, imgSrc, defaultContainer) {
+	  var newImage = document.createElement('img');
+	  newImage.src = imgSrc;
+	  if (e.target.isContentEditable) {
+	    e.target.appendChild(newImage);
+	  } else {
+	    defaultContainer.appendChild(newImage);
+	  }
+	}
 
 	function setupImages() {
-	  var contentBox = document.getElementsByClassName('content')[0];
+	  var defaultContentPlaceholder = document.getElementsByClassName('content')[0];
 	  document.ondragover = function () {
 	    return false;
 	  };
@@ -128,20 +138,34 @@
 	    return false;
 	  };
 	  document.ondrop = function (e) {
+	    console.log(e.dataTransfer.getData('text/html'));
 	    e.preventDefault();
-	    console.log(e.dataTransfer.files);
 	    if (e.dataTransfer.files.length) {
 	      var file = e.dataTransfer.files[0];
 	      if (supportedFormats.indexOf(file.type) !== -1) {
 	        var reader = new FileReader();
 	        reader.onload = function (event) {
-	          var newImage = document.createElement('img');
-	          newImage.src = event.target.result;
-	          contentBox.appendChild(newImage);
+	          return appendOnTargetOrDefault(e, event.target.result, defaultContentPlaceholder);
 	        };
 	        reader.readAsDataURL(file);
 	        return false;
 	      }
+	    } else if (e.dataTransfer.getData('Text').length) {
+	      var srcFromWeb = e.dataTransfer.getData('Text');
+	      if (supportedFormats.indexOf(srcFromWeb.slice(-4)) !== -1) {
+	        appendOnTargetOrDefault(e, srcFromWeb, defaultContentPlaceholder);
+	      }
+	      return false;
+	    } else if (e.dataTransfer.getData('text/html').length) {
+	      var _srcFromWeb = e.dataTransfer.getData('text/html');
+	      var imageHTML = document.createElement('html');
+	      imageHTML.innerHTML = _srcFromWeb;
+	      if (e.target.isContentEditable) {
+	        e.target.appendChild(imageHTML);
+	      } else {
+	        defaultContentPlaceholder.appendChild(imageHTML);
+	      }
+	      return false;
 	    }
 	  };
 	}
