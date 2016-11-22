@@ -15,6 +15,7 @@ function setupImages () {
   document.ondragover = () => false
   document.ondragend = () => false
   document.ondrop = (e) => {
+    console.log(e.dataTransfer.getData('text/html'))
     e.preventDefault()
     if (e.dataTransfer.files.length) {
       const file = e.dataTransfer.files[0]
@@ -28,6 +29,16 @@ function setupImages () {
       const srcFromWeb = e.dataTransfer.getData('Text')
       if (supportedFormats.indexOf(srcFromWeb.slice(-4)) !== -1) {
         appendOnTargetOrDefault(e, srcFromWeb, defaultContentPlaceholder)
+      }
+      return false
+    } else if (e.dataTransfer.getData('text/html').length) {
+      const srcFromWeb = e.dataTransfer.getData('text/html')
+      let imageHTML = document.createElement('html')
+      imageHTML.innerHTML = srcFromWeb
+      if (e.target.isContentEditable) {
+        e.target.appendChild(imageHTML)
+      } else {
+        defaultContentPlaceholder.appendChild(imageHTML)
       }
       return false
     }
