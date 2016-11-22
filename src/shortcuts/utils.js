@@ -11,7 +11,7 @@ function preventAndDispatch (transformName, e) {
 function setupKeys (shortcutKeycodes) {
   document.onkeydown = (e) => {
     e = e || window.event
-    if (e.ctrlKey) {
+    if (e.ctrlKey || e.metaKey) {
       let c = e.which || e.keyCode
       Object.keys(shortcutKeycodes).forEach((key) => {
         if (c === shortcutKeycodes[key].code) {
