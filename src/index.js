@@ -9,7 +9,7 @@ const shortcutKeycodes = {
 
 window.onload = () => {
   console.log('Setting things up')
-  document.execCommand("styleWithCSS",false,false)
+  document.execCommand('styleWithCSS', false, false)
   if (navigator.vendor !== 'Google Inc.') {
     setupKeys(shortcutKeycodes)
   }

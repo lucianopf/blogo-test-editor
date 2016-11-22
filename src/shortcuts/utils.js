@@ -1,10 +1,10 @@
 function dispatchTransform (transformName) {
-  document.execCommand(transformName, false, null);
+  document.execCommand(transformName, false, null)
 }
 
 function preventAndDispatch (transformName, e) {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault()
+  e.stopPropagation()
   dispatchTransform(transformName)
 }
 
@@ -23,4 +23,3 @@ function setupKeys (shortcutKeycodes) {
 }
 
 export default setupKeys
-
